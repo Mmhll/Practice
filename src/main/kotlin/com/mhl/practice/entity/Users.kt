@@ -7,9 +7,9 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import lombok.Data
 
-@Entity
+@Entity(name = "users")
 @Data
-data class UserEntity(
+data class Users(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,3 +19,5 @@ data class UserEntity(
     @Column(name = "full_name")
     val fullName: String
 )
+
+

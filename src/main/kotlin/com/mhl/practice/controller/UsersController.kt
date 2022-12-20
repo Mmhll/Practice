@@ -1,29 +1,32 @@
 package com.mhl.practice.controller
 
 import com.mhl.practice.entity.Users
-import com.mhl.practice.repository.UserRepository
+import com.mhl.practice.repository.UsersRepository
+import jakarta.annotation.Nullable
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
-class UserController {
+class UsersController {
     @Autowired
-    private lateinit var repository: UserRepository
+    private lateinit var repository: UsersRepository
 
-    @PostMapping("/auth")
-    fun auth(email: String, password: String): Users =
-        repository.findByEmailAndPassword(email, password)
+    @Nullable
+    @GetMapping("/auth")
+    fun auth(
+        @RequestParam("email") email: String,
+        @RequestParam("password") password: String
+    ): Users = repository.findByEmailAndPassword(email, password)
+
 
     @PostMapping("/createUser")
-    fun createUser(@RequestBody user: Users):String {
-        return try {
+    fun createUser(@RequestBody user: Users): String {
+        val foundUser = repository.findByEmail(user.email)
+        if (foundUser == null) {
             repository.save(user)
-            "Success"
-        } catch (e: Exception) {
-            "User exists"
+            return "Successful"
         }
+        return "User Exists"
     }
-    
+
 }
